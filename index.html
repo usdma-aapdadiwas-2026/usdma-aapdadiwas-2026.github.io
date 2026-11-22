@@ -685,6 +685,8 @@ html,body{margin:0;height:100%;font-family:'IBM Plex Sans',system-ui,sans-serif;
 .date{font-size:12px;border:1px solid #3c5562;border-radius:6px;padding:5px 9px;color:#dbe7ec}
 .date b{color:#fff}
 nav{display:flex;gap:2px;padding:0 14px;background:#1a2f38;overflow-x:auto}
+nav .fsb{margin-left:auto;align-self:center;flex:none;font:inherit;font-size:13px;color:#fff;background:transparent;border:1px solid rgba(255,255,255,.35);border-radius:7px;padding:5px 12px;cursor:pointer;white-space:nowrap}
+nav .fsb:hover{background:rgba(255,255,255,.12)}
 nav a{color:#c6d5db;text-decoration:none;padding:10px 14px;font-size:13.5px;font-weight:500;border-bottom:3px solid transparent;white-space:nowrap}
 nav a:hover{color:#fff}
 nav a.on{color:#fff;border-bottom-color:var(--saffron)}
@@ -855,6 +857,7 @@ footer{font-size:11px;color:var(--muted);margin-top:18px}
     <a href="#checks" data-s="checks">Data Checks</a>
     <a href="#officers" data-s="officers">जनपद प्रभारी अधिकारी</a>
     <a href="#downloads" data-s="downloads">Downloads / डाउनलोड</a>
+      <button id="fsBtn" class="fsb" title="Full screen / पूर्ण स्क्रीन">⛶ <span>Full Screen</span></button>
   </nav>
   <div class="fbar">
     <span class="fl">Filters</span>
@@ -1070,6 +1073,16 @@ function route(){const h=(location.hash||'#overview').slice(1);const s=SECTIONS.
   if(s==='map'){if(!m2)init2D();else setTimeout(()=>m2.invalidateSize(),50)}
   if(s==='view3d'){if(!m3)init3D();else setTimeout(()=>m3.resize(),50)}}
 window.addEventListener('hashchange',route);
+
+/* ---------- whole-page full screen ---------- */
+(function(){const b=document.getElementById('fsBtn'),de=document.documentElement;
+  const on=()=>document.fullscreenElement===de||document.webkitFullscreenElement===de;
+  const upd=()=>{b.querySelector('span').textContent=on()?'Exit Full Screen':'Full Screen';
+    setTimeout(()=>{try{m2&&m2.invalidateSize()}catch(e){}try{m3&&m3.resize()}catch(e){}},150)};
+  b.onclick=()=>{if(on()){(document.exitFullscreen||document.webkitExitFullscreen).call(document)}
+    else if(document.fullscreenElement||document.webkitFullscreenElement){(document.exitFullscreen||document.webkitExitFullscreen).call(document)}
+    else{(de.requestFullscreen||de.webkitRequestFullscreen).call(de)}};
+  document.addEventListener('fullscreenchange',upd);document.addEventListener('webkitfullscreenchange',upd);})();
 
 /* ---------- global filters ---------- */
 ALLD.forEach(d=>{const n=ROWS.filter(r=>r.district===d).length;const o=new Option(d+(n?' ('+n+')':' – pending'),d);o.disabled=!n;gD.add(o)});
