@@ -714,6 +714,16 @@ section.on{display:block}
 .dist .st{font-size:11px;border-radius:999px;padding:2px 8px}
 .dist.ok .st{background:#2f8a57;color:#fff}
 .dist.pd .st{background:#f1ede6;color:#8a7f70}
+.dist .st{white-space:nowrap;flex:none;margin-left:6px}
+.sbar{display:grid;grid-template-columns:140px 1fr 30px;align-items:center;gap:8px;font-size:12.5px;margin:6px 0;cursor:pointer}
+.sbar:hover .lbl{color:var(--accent);text-decoration:underline}
+.sbar.cur .lbl{font-weight:600;color:var(--accent)}
+.strack{display:flex;height:16px;background:#efece6;border-radius:4px;overflow:hidden}
+.strack div{height:100%;border-right:1px solid #fff}
+.strack div:last-child{border-right:none}
+.sbar .c{text-align:right;color:var(--muted);font-variant-numeric:tabular-nums;font-weight:600}
+.slg{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:11.5px;color:var(--muted);margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
+.slg span{display:inline-flex;align-items:center;gap:5px}.slg i{width:10px;height:10px;border-radius:2px;display:inline-block}
 .bars .row{display:grid;grid-template-columns:150px 1fr 26px;align-items:center;gap:8px;font-size:12.5px;margin:5px 0}
 .track{height:9px;background:#efece6;border-radius:5px;overflow:hidden}
 .fill{height:100%;border-radius:5px;background:var(--accent)}
@@ -859,6 +869,7 @@ footer{font-size:11px;color:var(--muted);margin-top:18px}
     <div class="card"><h3>District submission status</h3><div class="dgrid" id="dgrid"></div></div>
     <div class="card"><h3>Locations by hazard type</h3><div class="bars" id="hbars"></div></div>
   </div>
+  <div class="card" style="margin-top:16px"><h3>Mock locations by district &amp; hazard type</h3><div id="dchart"></div></div>
   <div class="card" style="margin-top:16px"><h3>Agencies / resources most deployed</h3><div class="bars" id="abars" style="columns:2;column-gap:28px"></div></div>
   <div class="notes" style="cursor:pointer" onclick="location.hash='#checks'"><b>Data checks:</b> <span id="ncount"></span> — see the <a href="#checks">Data Checks</a> tab.</div>
   <footer>Source: district submissions (Excel, DMS converted to decimal degrees). District boundaries: Census 2011, simplified, indicative only. Satellite: Esri (default) / Google; terrain: SRTM via AWS Terrain Tiles (internet required).</footer>
@@ -1058,6 +1069,11 @@ function overview(){
   o1.textContent=FR.length;o2.textContent=REP.length;o3.textContent=Object.keys(hz).filter(h=>h!=='Not specified').length;o4.textContent=Object.keys(ag).length;
   dgrid.innerHTML=ALLD.map(d=>{const n=ROWS.filter(r=>r.district===d).length;return `<div class="dist ${n?'ok':'pd'}${gD.value===d?' cur':''}" data-d="${d}"><span>${d}</span><span class="st">${n?n+' locations':'Pending'}</span></div>`}).join('');
   dgrid.querySelectorAll('.dist.ok').forEach(e=>e.onclick=()=>{location.hash='#map';setTimeout(()=>setDist(e.dataset.d),150)});
+  {const by={};ROWS.filter(r=>gMatch(Object.assign({},r,{district:gD.value||r.district}))).forEach(r=>{(by[r.district]=by[r.district]||{})[r.hazard]=(by[r.district][r.hazard]||0)+1});
+   const CR=Object.values(by);const ds=Object.keys(by).map(d=>[d,Object.values(by[d]).reduce((a,b)=>a+b,0)]).sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0])),mx=ds.length?ds[0][1]:1,used=Object.keys(HZ).filter(h=>CR.some(o=>o[h]));
+   dchart.innerHTML=(ds.map(([d,t])=>`<div class="sbar${gD.value===d?' cur':''}" data-d="${d}"><span class="lbl">${d}</span><div class="strack" style="width:${Math.max(t/mx*100,4)}%">${used.filter(h=>by[d][h]).map(h=>`<div title="${d} – ${h}: ${by[d][h]}" style="flex:${by[d][h]};background:${HZ[h]}"></div>`).join('')}</div><span class="c">${t}</span></div>`).join('')||'<div style="color:var(--muted);font-size:12.5px">No locations match the filters.</div>')
+     +`<div class="slg">${used.map(h=>`<span><i style="background:${HZ[h]}"></i>${h}</span>`).join('')}</div>`;
+   dchart.querySelectorAll('.sbar').forEach(e=>e.onclick=()=>{gD.value=gD.value===e.dataset.d?'':e.dataset.d;gD.dispatchEvent(new Event('change'))});}
   bars(hbars,hz,k=>HZ[k],99,k=>`<span class="ic sm" style="display:inline-flex;vertical-align:middle;background:${HZ[k]}">${ico(k,14)}</span> `);bars(abars,ag,null,14);
   renderChecks();
 }
