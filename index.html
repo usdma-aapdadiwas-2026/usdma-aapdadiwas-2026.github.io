@@ -922,7 +922,7 @@ footer{font-size:11px;color:var(--muted);margin-top:18px}
   <div class="card" style="margin-top:16px"><h3>Agencies / resources most deployed</h3><div class="bars" id="abars" style="columns:2;column-gap:28px"></div></div>
   <div class="vstrip" id="visCard">&#128065; <b>Visitors / आगंतुक</b><span class="vsep"></span>Total visits / कुल विज़िट: <b class="vn" id="visTot">…</b><span class="vsep"></span>Unique visitors / अद्वितीय आगंतुक: <b class="vn" id="visUni">…</b><span class="vnote" id="visNote">since 24 Nov 2026</span></div>
   <div class="notes" style="cursor:pointer" onclick="location.hash='#checks'"><b>Data checks:</b> <span id="ncount"></span> — see the <a href="#checks">Data Checks</a> tab.</div>
-  <footer>Source: district submissions (Excel, DMS converted to decimal degrees). District boundaries: Census 2011, simplified, indicative only. Background: Google Hybrid (default) / Google Terrain; terrain: SRTM via AWS Terrain Tiles (internet required).</footer>
+  <footer>Source: district submissions (Excel, DMS converted to decimal degrees). District boundaries: Census 2011, simplified, indicative only. Background: Google Hybrid (default), Google Terrain, Google, Esri, OpenStreetMap, OpenTopoMap, CARTO; terrain: SRTM via AWS Terrain Tiles (internet required).</footer>
 </div></section>
 
 <section id="s-map"><div class="split">
@@ -939,7 +939,7 @@ footer{font-size:11px;color:var(--muted);margin-top:18px}
   <div class="p3">
     <b style="font-size:13.5px">3D Terrain View</b>
     <label>Background</label>
-    <div class="btns" id="bg3"><button data-b="ghyb" class="on">Google Hybrid</button><button data-b="gter">Google Terrain</button></div>
+    <div class="btns" id="bg3"><button data-b="ghyb" class="on">Google Hybrid</button><button data-b="gter">Google Terrain</button><button data-b="gsat">Google Satellite</button><button data-b="esri">Esri Satellite</button><button data-b="etopo">Esri Topo</button><button data-b="osm">OpenStreetMap</button></div>
     <label>Go to</label>
     <div class="btns" id="go3"><button data-g="all">Uttarakhand</button></div>
     <label>Terrain exaggeration: <span id="exv">1.5</span>×</label><input type="range" id="ex" min="1" max="3" step="0.1" value="1.5">
@@ -1210,17 +1210,29 @@ function overview(){
 }
 
 /* ---------- 2D ---------- */
+const LIGHTB=new Set(['Boundaries only','Google Terrain (hill relief)','Google Roadmap','Esri Topographic','Esri Street Map','OpenStreetMap','OpenTopoMap (contours)','CARTO Voyager','CARTO Light']);
 let selDist='All',hzOff=new Set(),selId=null,dLayer,allB,mGroup,mk={},curBase='Google Hybrid (satellite + labels)',stgOn=false,sGroup,stgBtn;
 function styleD(f){const n=f.properties.name,act=REP.includes(n),sel=selDist===n,zin=m2&&m2.getZoom()>=10;
-  if(sel||zin)return{color:curBase!=='Boundaries only'?(sel?'#ffcf3f':'#ffffff'):(sel?'#0b5c6b':'#7d8a91'),weight:sel?3:1.4,fillOpacity:0,dashArray:sel?null:'4 4'};
-  if(curBase!=='Boundaries only')return{color:sel?'#ffcf3f':act?'#ffe9a8':'#ffffff',weight:sel?3:act?2.2:1.2,fillColor:'#ffe9a8',fillOpacity:sel?0.12:act?0.06:0,dashArray:act?null:'4 4'};
+  if(sel||zin)return{color:!LIGHTB.has(curBase)?(sel?'#ffcf3f':'#ffffff'):(sel?'#0b5c6b':'#7d8a91'),weight:sel?3:1.4,fillOpacity:0,dashArray:sel?null:'4 4'};
+  if(!LIGHTB.has(curBase))return{color:sel?'#ffcf3f':act?'#ffe9a8':'#ffffff',weight:sel?3:act?2.2:1.2,fillColor:'#ffe9a8',fillOpacity:sel?0.12:act?0.06:0,dashArray:act?null:'4 4'};
   return{color:sel?'#0b5c6b':'#7d8a91',weight:sel?2.6:act?1.6:1,fillColor:act?'#f6e7c8':'#fff',fillOpacity:sel?0.75:act?0.6:0.45,dashArray:act?null:'3 3'}}
 function init2D(){
   m2=L.map('map2d',{zoomSnap:.25}).setView([30.1,79.2],8);m2.attributionControl.setPrefix('');
   const gs=l=>L.tileLayer('https://mt{s}.google.com/vt/lyrs='+l+'&x={x}&y={y}&z={z}',{subdomains:'0123',maxZoom:20,attribution:'Imagery © Google'});
-  const base={'Google Hybrid (satellite + labels)':gs('y'),'Google Terrain (hill relief)':gs('p')};
+  const tl=(u,a,o)=>L.tileLayer(u,Object.assign({maxZoom:19,attribution:a},o||{}));
+  const base={'Google Hybrid (satellite + labels)':gs('y'),'Google Terrain (hill relief)':gs('p'),'Google Satellite':gs('s'),'Google Roadmap':gs('m'),
+    'Esri Satellite':tl('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}','Imagery © Esri, Maxar, Earthstar Geographics'),
+    'Esri Topographic':tl('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}','© Esri'),
+    'Esri Street Map':tl('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}','© Esri'),
+    'OpenStreetMap':tl('https://tile.openstreetmap.org/{z}/{x}/{y}.png','© OpenStreetMap contributors'),
+    'OpenTopoMap (contours)':tl('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png','© OpenStreetMap contributors, SRTM | © OpenTopoMap (CC-BY-SA)',{maxZoom:17,subdomains:'abc'}),
+    'CARTO Voyager':tl('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png','© OpenStreetMap contributors © CARTO',{subdomains:'abcd',maxZoom:20}),
+    'CARTO Light':tl('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png','© OpenStreetMap contributors © CARTO',{subdomains:'abcd',maxZoom:20}),
+    'CARTO Dark':tl('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png','© OpenStreetMap contributors © CARTO',{subdomains:'abcd',maxZoom:20}),
+    'Boundaries only':L.layerGroup()};
+  const hill=tl('https://server.arcgisonline.com/ArcGIS/rest/services/Elevation/World_Hillshade/MapServer/tile/{z}/{y}/{x}','Hillshade © Esri',{maxZoom:16,opacity:.45});
   base[curBase].addTo(m2);
-  L.control.layers(base,null,{position:'topright',collapsed:true}).addTo(m2);
+  L.control.layers(base,{'Hillshade (hill relief)':hill},{position:'topright',collapsed:true}).addTo(m2);
   L.control.scale({imperial:false}).addTo(m2);
   const FS=L.control({position:'topleft'});FS.onAdd=()=>{const d=L.DomUtil.create('div','leaflet-bar fsbtn');d.innerHTML='<a href="#" role="button"></a>';const a=d.firstChild;
     const ex='<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5"/></svg>',
@@ -1237,7 +1249,7 @@ function init2D(){
     L.DomEvent.disableClickPropagation(d);upd();return d};FS.addTo(m2);
   const N=L.control({position:'topleft'});N.onAdd=()=>{const d=L.DomUtil.create('div','north');d.innerHTML='▲<br>N';return d};N.addTo(m2);
   dLayer=L.geoJSON(DISTRICTS,{style:styleD,onEachFeature:(f,l)=>{l.bindTooltip(f.properties.name,{permanent:true,direction:'center',className:'dlabel'+(REP.includes(f.properties.name)?' active':'')});l.on('click',()=>{if(REP.includes(f.properties.name))setDist(f.properties.name)})}}).addTo(m2);
-  m2.on('baselayerchange',e=>{curBase=e.name;dLayer.setStyle(styleD);map2d.classList.toggle('img',curBase!=='Boundaries only')});
+  m2.on('baselayerchange',e=>{curBase=e.name;dLayer.setStyle(styleD);map2d.classList.toggle('img',!LIGHTB.has(curBase))});
   allB=dLayer.getBounds();
   m2.on('zoomend',()=>dLayer.setStyle(styleD));
   ROWS.forEach(r=>{const icon=()=>L.divIcon({className:'',html:`<div class="pin2${selId===r.id?' sel':''}"><div class="pc" style="background:${HZ[r.hazard]}">${ico(r.hazard,18)}</div><div class="ptag">${r.id}</div><div class="pt" style="border-top-color:${HZ[r.hazard]}"></div></div>`,iconSize:[34,44],iconAnchor:[17,44],popupAnchor:[0,-40]});
@@ -1282,9 +1294,9 @@ function init3D(){
   const T=['https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'];
   m3=new maplibregl.Map({container:'map3d',center:[78.45,30.6],zoom:8.6,pitch:60,bearing:-20,maxPitch:85,attributionControl:{compact:true},
    style:{version:8,glyphs:'https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf',
-    sources:{ghyb:ras(G('y'),'© Google',20),gter:ras(G('p'),'© Google',20),
+    sources:{ghyb:ras(G('y'),'© Google',20),gter:ras(G('p'),'© Google',20),gsat:ras(G('s'),'Imagery © Google',20),esri:ras(['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'],'Imagery © Esri'),etopo:ras(['https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}'],'© Esri'),osm:ras(['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],'© OpenStreetMap contributors'),
      dem:{type:'raster-dem',tiles:T,tileSize:256,encoding:'terrarium',maxzoom:14,attribution:'Terrain: SRTM (AWS Terrain Tiles)'},dem2:{type:'raster-dem',tiles:T,tileSize:256,encoding:'terrarium',maxzoom:14},dist:{type:'geojson',data:DISTRICTS}},
-    layers:[{id:'bg',type:'background',paint:{'background-color':'#1b2a31'}},{id:'ghyb',type:'raster',source:'ghyb'},{id:'gter',type:'raster',source:'gter',layout:{visibility:'none'}},
+    layers:[{id:'bg',type:'background',paint:{'background-color':'#1b2a31'}},{id:'ghyb',type:'raster',source:'ghyb'},{id:'gter',type:'raster',source:'gter',layout:{visibility:'none'}},{id:'gsat',type:'raster',source:'gsat',layout:{visibility:'none'}},{id:'esri',type:'raster',source:'esri',layout:{visibility:'none'}},{id:'etopo',type:'raster',source:'etopo',layout:{visibility:'none'}},{id:'osm',type:'raster',source:'osm',layout:{visibility:'none'}},
      {id:'hill',type:'hillshade',source:'dem2',paint:{'hillshade-exaggeration':0.35}},
      {id:'dfill',type:'fill',source:'dist',maxzoom:10,paint:{'fill-color':'#ffe9a8','fill-opacity':['match',['get','name'],REP,0.08,0]}},
      {id:'dline',type:'line',source:'dist',paint:{'line-color':['match',['get','name'],REP,'#ffe08a','#ffffff'],'line-width':['match',['get','name'],REP,2.4,1.1]}},
@@ -1297,7 +1309,7 @@ function init3D(){
   m3.on('load',()=>{let a=[180,90,-180,-90];ROWS.forEach(r=>{a=[Math.min(a[0],r.lon),Math.min(a[1],r.lat),Math.max(a[2],r.lon),Math.max(a[3],r.lat)]});m3.fitBounds([[a[0],a[1]],[a[2],a[3]]],{padding:{top:60,bottom:60,left:330,right:60},pitch:60,bearing:-20,duration:0})});
   ROWS.forEach(r=>{const el=document.createElement('div');el.className='pin3';el.innerHTML=`<div class="h" style="background:${HZ[r.hazard]}">${ico(r.hazard,18)}</div><div class="lb">${r.id}</div><div class="st"></div>`;
     r._el3=el;r._m3=new maplibregl.Marker({element:el,anchor:'bottom'}).setLngLat([r.lon,r.lat]).setPopup(new maplibregl.Popup({offset:[0,-46],maxWidth:'310px'}).setHTML(popupHTML(r))).addTo(m3)});
-  document.querySelectorAll('#bg3 button').forEach(b=>b.onclick=()=>{['ghyb','gter'].forEach(k=>m3.setLayoutProperty(k,'visibility',k===b.dataset.b?'visible':'none'));document.querySelectorAll('#bg3 button').forEach(x=>x.classList.toggle('on',x===b))});
+  document.querySelectorAll('#bg3 button').forEach(b=>b.onclick=()=>{['ghyb','gter','gsat','esri','etopo','osm'].forEach(k=>m3.setLayoutProperty(k,'visibility',k===b.dataset.b?'visible':'none'));document.querySelectorAll('#bg3 button').forEach(x=>x.classList.toggle('on',x===b))});
   document.querySelectorAll('#go3 button').forEach(b=>b.onclick=()=>{if(b.dataset.g==='all'){m3.setPaintProperty('dfill','fill-opacity',['match',['get','name'],REP,0.08,0]);m3.flyTo({center:[79.2,30.05],zoom:7.4,pitch:45,bearing:0});return}
     const f=DISTRICTS.features.find(f=>f.properties.name===b.dataset.g);let a=[180,90,-180,-90];const w=c=>typeof c[0]==='number'?(a=[Math.min(a[0],c[0]),Math.min(a[1],c[1]),Math.max(a[2],c[0]),Math.max(a[3],c[1])]):c.forEach(w);w(f.geometry.coordinates);
     m3.setPaintProperty('dfill','fill-opacity',['match',['get','name'],b.dataset.g,0,REP,0.08,0]);

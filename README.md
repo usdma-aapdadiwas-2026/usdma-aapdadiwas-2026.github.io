@@ -6,4 +6,4 @@ Open the portal: https://usdma-aapdadiwas-2026.github.io/
 
 - TTEX: 25 Nov 2026 · MEX: 28 Nov 2026
 - Data: district submissions (Tehri Garhwal, Uttarkashi, Pauri Garhwal, Rudraprayag, Bageshwar, Haridwar, Almora, Chamoli, Pithoragarh, Champawat, Nainital, Udham Singh Nagar, Dehradun) – 147 locations (all 13 districts); coordinates in decimal degrees.
-- Boundaries: Census 2011 (indicative). Background: Google Hybrid (default) / Google Terrain; terrain: SRTM (AWS Terrain Tiles).
+- Boundaries: Census 2011 (indicative). Background: Google Hybrid (default), Google Terrain, Google, Esri, OpenStreetMap, OpenTopoMap, CARTO; terrain: SRTM (AWS Terrain Tiles).
