@@ -676,6 +676,16 @@ html,body{margin:0;height:100%;font-family:'IBM Plex Sans',system-ui,sans-serif;
 .brand{display:flex;align-items:center;gap:14px;padding:10px 20px;border-bottom:3px solid var(--saffron)}
 .logo{height:62px;width:auto;flex:none;background:#fff;border-radius:8px;padding:3px 5px}
 .glogo{height:62px;width:auto;background:#fff;border-radius:8px;padding:3px 5px}
+.agobj{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.agobj>div{background:#fff7ef;border:1px solid #f3d3b0;border-left:4px solid var(--saffron);border-radius:8px;padding:10px 12px}
+.agobj h4{margin:0 0 4px;font-size:13.5px;color:#a85a12}.agobj p{margin:0;font-size:13px;line-height:1.55}
+.agtab{width:100%;border-collapse:collapse;font-size:13.5px}
+.agtab th{background:var(--navy);color:#fff;text-align:left;padding:8px 10px;font-weight:600}
+.agtab td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.45}
+.agtab .agt{font-family:'IBM Plex Mono',monospace;font-weight:600;white-space:nowrap;color:#a85a12}
+.agtab .agd{white-space:nowrap;color:var(--muted)}
+.agtab tr.agv td{background:#fff4e6}.agtab tr.agb td{background:#f3f5f6;color:var(--muted);font-style:italic}
+@media(max-width:900px){.agobj{grid-template-columns:1fr}}
 /* full screen: compact saffron header – title + logos only */
 body.fsmode .top{background:#FF9933}
 body.fsmode .brand{padding:6px 20px;border-bottom:3px solid #c25e00;justify-content:center}
@@ -882,6 +892,7 @@ footer{font-size:11px;color:var(--muted);margin-top:18px}
     <a href="#checks" data-s="checks">Data Checks</a>
     <a href="#icobs" data-s="icobs">IC &amp; Observers</a>
     <a href="#officers" data-s="officers">जनपद प्रभारी अधिकारी</a>
+    <a href="#agenda" data-s="agenda">Agenda / Minute-to-Minute</a>
     <a href="#downloads" data-s="downloads">Downloads / डाउनलोड</a>
       <span class="vpill" title="Visitors / आगंतुक">&#128065; <b id="visPill">…</b></span>
       <button id="fsBtn" class="fsb" title="Full screen / पूर्ण स्क्रीन">⛶ <span>Full Screen</span></button>
@@ -979,6 +990,19 @@ footer{font-size:11px;color:var(--muted);margin-top:18px}
 </div>
 </div></section>
 
+<section id="s-agenda"><div class="pad">
+<div class="card">
+<h2 style="margin:0 0 2px;font-size:19px">Agenda / Minute-to-Minute Programme</h2>
+<p style="margin:0 0 12px;font-size:14px;color:var(--muted)">Uttarakhand Aapda Prabandhan Diwas – State-Level Mock Exercise · <b style="color:var(--ink,#13232b)">28 November 2026</b> &nbsp;<a class="b" style="margin-left:6px" href="Agenda_Minute_to_Minute_Programme_28-11-2026.pdf" download>Download Agenda (PDF)</a></p>
+<div class="agobj">
+<div><h4>1. Objective</h4><p>To commemorate the inaugural observance through a Mock Exercise aimed at assessing and strengthening disaster preparedness, IRS activation, inter-agency coordination, decision-making and response capabilities at the State, District and Tehsil levels.</p></div>
+<div><h4>2. Modality</h4><p>A structured, scenario-based Mock Exercise involving State, District and Tehsil IRS teams, line departments, ESF agencies and emergency responders to assess incident command, communication, coordination, situational analysis and resource mobilization through simulated disaster situations.</p></div>
+<div><h4>3. Expected Outcome</h4><p>Enhanced institutional preparedness, operational readiness and coordinated response capabilities; validation of disaster management plans and SOPs; identification of operational gaps; and strengthened IRS implementation for effective disaster response and protection of lives, livelihoods and critical infrastructure.</p></div>
+</div>
+<div style="overflow:auto;margin-top:14px"><table class="agtab"><thead><tr><th style="width:96px">Time</th><th>Agenda Item</th><th style="width:34%">Speaker / Responsible</th><th style="width:110px">Duration</th></tr></thead><tbody><tr class=""><td class="agt">08:30 AM</td><td>Setting up Incident Command Post, Resource Mobilization, Preparation, and Coordination in Staging Areas and Coordination amongst IRTs</td><td>ROs, Incident Commanders (State and District), Incident-specific Nodal Officers, Incident-specific ICs, all pertinent Line Department Nodal Officers, DEOC, SEOC &amp; USDMA officials</td><td class="agd">1 Hr</td></tr><tr class=""><td class="agt">09:30 AM</td><td>ME Situational Analysis &amp; Interaction (State, District and Tehsil IRS System)</td><td>ACEO (Ops) USDMA, DDMA, SEOC, DEOC and other Stakeholders</td><td class="agd">45 Mins</td></tr><tr class="agv"><td class="agt">09:55 AM</td><td>Arrival of Vice Chairmen of the Uttarakhand State Disaster Management Advisory Committee</td><td>SEOC, USDMA</td><td class="agd">20 Mins</td></tr><tr class=""><td class="agt">10:15 AM</td><td>Opening and Welcome Address</td><td>Secretary, Department of Disaster Management &amp; Rehabilitation / USDMA</td><td class="agd">10 Mins</td></tr><tr class=""><td class="agt">10:25 AM</td><td>Recap of OCC, TTEx &amp; Brief on Conduct of ME</td><td>ACEO (Ops), USDMA</td><td class="agd">10 Mins</td></tr><tr class=""><td class="agt">10:35 AM</td><td>Continuation of ME: Scenario-based interaction with District Magistrate (RO), IC on overall ME planning, Situational Analysis (State, District &amp; Tehsil)</td><td>District Magistrate (RO) / Incident Commander (all 13 districts)</td><td class="agd">50 Mins</td></tr><tr class="agb"><td class="agt">11:25 AM</td><td>Hi-Tea</td><td>—</td><td class="agd">—</td></tr><tr class="agv"><td class="agt">12:00 PM</td><td>Arrival of Hon&#x27;ble Minister of Disaster Management &amp; Rehabilitation, Government of Uttarakhand</td><td>SEOC, USDMA</td><td class="agd">10 Mins</td></tr><tr class=""><td class="agt">12:10 PM</td><td>Welcome address, Brief on Conduct &amp; Recap of ME</td><td>Secretary, Department of Disaster Management &amp; Rehabilitation / USDMA</td><td class="agd">10 Mins</td></tr><tr class="agv"><td class="agt">12:20 PM</td><td>Release of the SEOC Duty Officer Handbook</td><td>SEOC, USDMA</td><td class="agd">10 Mins</td></tr><tr class=""><td class="agt">12:30 PM</td><td>Continuation of ME: Situational Analysis &amp; Role-based Interaction of Chief Guest with RO/IC</td><td>USDMA, SEOC, DEOC and other Stakeholders</td><td class="agd">1 Hr 05 Mins</td></tr><tr class=""><td class="agt">01:35 PM</td><td>Address by Lt. Col. (Retd.) Raghuveer Singh Bhandari, Vice-Chairman of the Uttarakhand State Disaster Management Advisory Committee</td><td>SEOC, USDMA</td><td class="agd">05 Mins</td></tr><tr class=""><td class="agt">01:40 PM</td><td>Address by Dr. Vinay Kumar Ruhela, Vice-Chairman of the Uttarakhand State Disaster Management Advisory Committee</td><td>SEOC, USDMA</td><td class="agd">05 Mins</td></tr><tr class=""><td class="agt">01:45 PM</td><td>Address by Mr. Madan Kaushik, Cabinet Minister for Disaster Management and Rehabilitation</td><td>SEOC, USDMA</td><td class="agd">10 Mins</td></tr><tr class="agb"><td class="agt">01:55 PM</td><td>General Lunch</td><td>—</td><td class="agd">1 Hr 30 Mins</td></tr><tr class=""><td class="agt">03:25 PM</td><td>Debriefing and way forward</td><td>Secretary, USDMA, ACEO (Admin), ACEO (Ops), USDMA, District ROs, Chief Observers, Incident Commanders, IRS officials, other relevant stakeholders</td><td class="agd">45 Mins</td></tr><tr class=""><td class="agt">04:10 PM</td><td>Closing remarks</td><td>Secretary, Department of Disaster Management &amp; Rehabilitation / USDMA</td><td class="agd">5 Mins</td></tr><tr class=""><td class="agt">04:15 PM</td><td>Vote of Thanks</td><td>ACEO (Admin), USDMA</td><td class="agd">5 Mins</td></tr></tbody></table></div>
+<p style="margin:10px 0 0;font-size:12px;color:var(--muted)">Source: Final Agenda, USDMA. 10:25 and 10:35 are written as “PM” in the PDF — shown here as AM (morning session).</p>
+</div>
+</div></section>
 <section id="s-downloads"><div class="pad">
   <h3 class="dlh">English</h3>
   <div class="dl">
@@ -1129,7 +1153,7 @@ function renderChecks(){
   document.getElementById('cpending').innerHTML=`<b>Submission status:</b> ${got.size} of ${ALL.length} districts received (${ROWS.length} locations). Yet to submit (${pend.length}): ${pend.join(', ')||'none'}.`;
 }
 /* ---------- routing ---------- */
-const SECTIONS=['overview','map','view3d','data','checks','icobs','officers','downloads'];
+const SECTIONS=['overview','map','view3d','data','checks','icobs','officers','agenda','downloads'];
 let m2=null,m3=null,sp=false;
 function route(){const h=(location.hash||'#overview').slice(1);const s=SECTIONS.includes(h)?h:'overview';
   SECTIONS.forEach(x=>document.getElementById('s-'+x).classList.toggle('on',x===s));
