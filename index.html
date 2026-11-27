@@ -676,6 +676,12 @@ html,body{margin:0;height:100%;font-family:'IBM Plex Sans',system-ui,sans-serif;
 .brand{display:flex;align-items:center;gap:14px;padding:10px 20px;border-bottom:3px solid var(--saffron)}
 .logo{height:62px;width:auto;flex:none;background:#fff;border-radius:8px;padding:3px 5px}
 .glogo{height:62px;width:auto;background:#fff;border-radius:8px;padding:3px 5px}
+/* full screen: compact saffron header – title + logos only */
+body.fsmode .top{background:#FF9933}
+body.fsmode .brand{padding:6px 20px;border-bottom:3px solid #c25e00;justify-content:center}
+body.fsmode .brand .obj2,body.fsmode .brand .en,body.fsmode .brand .sub,body.fsmode .brand .right{display:none!important}
+body.fsmode .brand .hi1{font-size:24px;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.25)}
+body.fsmode .logo,body.fsmode .glogo{height:46px}
 .brand h1{margin:0;font-size:17px;font-weight:600}
 .brand .hi1{font-family:'Noto Sans Devanagari','IBM Plex Sans',sans-serif;font-size:20px;font-weight:600;margin:0;line-height:1.25}
 .brand .en{font-size:13.5px;color:#f3c58f;font-weight:500}
@@ -1134,7 +1140,7 @@ window.addEventListener('hashchange',route);
 /* ---------- whole-page full screen ---------- */
 (function(){const b=document.getElementById('fsBtn'),de=document.documentElement;
   const on=()=>document.fullscreenElement===de||document.webkitFullscreenElement===de;
-  const upd=()=>{b.querySelector('span').textContent=on()?'Exit Full Screen':'Full Screen';
+  const upd=()=>{document.body.classList.toggle('fsmode',on());b.querySelector('span').textContent=on()?'Exit Full Screen':'Full Screen';
     setTimeout(()=>{try{m2&&m2.invalidateSize()}catch(e){}try{m3&&m3.resize()}catch(e){}},150)};
   b.onclick=()=>{if(on()){(document.exitFullscreen||document.webkitExitFullscreen).call(document)}
     else if(document.fullscreenElement||document.webkitFullscreenElement){(document.exitFullscreen||document.webkitExitFullscreen).call(document)}
